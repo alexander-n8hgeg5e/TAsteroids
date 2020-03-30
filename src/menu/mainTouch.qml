@@ -18,13 +18,6 @@ Window {
     {
             id : mainForm
             anchors.fill: parent
-            Keys.onPressed: {
-                if (event.key == Qt.Key_Return) {
-                    event.accepted = true;
-                    menuGameInteraction.playerCount = 1;
-                    menuGameInteraction.showGame();
-                }
-            }
 
             // show player high score input when a game has finished
             Component.onCompleted:
@@ -95,6 +88,8 @@ Window {
                 mainForm.menuLevelPlayerInput.visible = false;
                 mainForm.menuLevelHighScore.visible = false;
             }
+
+
     }
 
     // window dragging
