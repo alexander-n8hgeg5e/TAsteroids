@@ -19,6 +19,8 @@
 #include <QGraphicsColorizeEffect>
 #include <QGraphicsSvgItem>
 #include <QtDebug>
+#include <stdlib.h>
+
 
 // note internal resolution is 1600*1200 for positions of items
 // all items must be created inside the populate-function
@@ -590,8 +592,8 @@ void GraphicsView::keyReleaseEvent(QKeyEvent *event)
 	}
 
 	if(event->key() == Qt::Key_Escape)
-	{
-		this->close();
+	{   
+        exit(0);
 	}
 	else
 		emit signalKeyRelease(event->key());

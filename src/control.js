@@ -79,11 +79,19 @@ function stopAcceleration(/*Vehicle* */ vehicle)
 
 function enablePositionControl(/*Vehicle* */ vehicle)
 {
-	vehicle.positionControl = 100.0;
+	vehicle.positionControl = 20.0;
+}
+function enableRotationControl(/*Vehicle* */ vehicle)
+{
+	vehicle.rotationControl = 100.0;
 }
 function disablePositionControl(/*Vehicle* */ vehicle)
 {
 	vehicle.positionControl = 0.0;
+}
+function disableRotationControl(/*Vehicle* */ vehicle)
+{
+	vehicle.rotationControl = 0.0;
 }
 
 function enableShield(/*Vehicle* */ vehicle)
@@ -175,21 +183,30 @@ function onKeyPress(key)
 		}
 		case Qt.Key_S:
 		{
-			//if(playerVehicles[0].angularVelocity < 5){
-			//	playerVehicles[0].angularVelocity = 0;
-			//	playerVehicles[0].torque = 0;
-			//}
+			//if(playerVehicles[0].angularVelocity < 0.01){
+			//    playerVehicles[0].angularVelocity = 0;
+			//    playerVehicles[0].torque = 0;
+			//    }
 			//else{
-			//	playerVehicles[0].torque = 100.0;
+	            disableRotationControl(playerVehicles[0]);
+				playerVehicles[0].torque = 500.0;
 			//}
-			playerVehicles[0].angularVelocity = -350.0;
+            //playerVehicles[0].angularVelocity = -350.0;
 
             isRotatingLeft = true;
 			break;
 		}
 		case Qt.Key_F:
 		{
-			playerVehicles[0].angularVelocity = 350.0;
+			//if(playerVehicles[0].angularVelocity < 0.01){
+			//    playerVehicles[0].angularVelocity = 0.0;
+			//    playerVehicles[0].torque = 0;
+			//    }
+			//else{
+	            disableRotationControl(playerVehicles[0]);
+				playerVehicles[0].torque = -500.0;
+            //}
+			//playerVehicles[0].angularVelocity = 350.0;
             isRotatingRight = true;
 			break;
 		}
@@ -278,20 +295,24 @@ switch (key)
 		case Qt.Key_S:
 		{
             isRotatingLeft = false;
-            if(isRotatingRight === false)
-            {
-                playerVehicles[0].angularVelocity = 0;
-            }
+            //if(isRotatingRight === false)
+            //{
+                //playerVehicles[0].angularVelocity = 0;
+			    playerVehicles[0].torque = 0.0;
+				enableRotationControl(playerVehicles[0]);
+            //}
 			break;
 		}
 
 		case Qt.Key_F:
 		{
             isRotatingRight = false;
-            if(isRotatingLeft === false)
-            {
-                playerVehicles[0].angularVelocity = 0;
-            }
+            //if(isRotatingLeft === false)
+            //{
+                //playerVehicles[0].angularVelocity = 0;
+			    playerVehicles[0].torque = 0.0;
+				enableRotationControl(playerVehicles[0]);
+            //}
 			break;
 		}
 		case Qt.Key_Space:

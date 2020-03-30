@@ -29,8 +29,7 @@ class MovingItem : public AnimatedItem
 	Q_PROPERTY(qreal xVelocity READ xVelocity STORED false)
 	Q_PROPERTY(qreal yVelocity READ yVelocity STORED false)
 
-	//Q_PROPERTY(qreal torque READ torque WRITE setTorque STORED false)
-	Q_PROPERTY(qreal positionControl READ positionControl WRITE setPositionControl STORED false)
+	Q_PROPERTY(qreal torque READ torque WRITE setTorque STORED false)
 
 	Q_PROPERTY(qreal xAcceleration READ xAcceleration WRITE setXAcceleration STORED false)
 	Q_PROPERTY(qreal yAcceleration READ yAcceleration WRITE setYAcceleration STORED false)
@@ -61,10 +60,8 @@ public:
 	inline qreal xAcceleration() const { return acceleration_.x();}
 	inline qreal yAcceleration() const { return acceleration_.y();}
 
-	//inline void setTorque(qreal val) { torque_=val;}
-	//inline qreal torque() { return torque_;}
-	inline void setPositionControl(qreal val) { positionControl_=val;}
-	inline qreal positionControl() { return positionControl_;}
+	inline void setTorque(qreal val) { torque_=val;}
+	inline qreal torque() { return torque_;}
 
 	Q_INVOKABLE inline void applyImpulse(float px, float py);
 				inline void applyImpulse(const QPointF& impulse) { applyImpulse(impulse.x(),impulse.y());}
@@ -133,8 +130,7 @@ private:
 	QPointF  maximumVelocity_;
 	QPointF acceleration_;
 	QPointF decceleration_;
-	//qreal torque_;
-	qreal positionControl_;
+	qreal torque_;
 	b2Body *body_;
 	b2World *world_;
 };

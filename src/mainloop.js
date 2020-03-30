@@ -85,6 +85,34 @@ function mainLoop()
 			playerVehicles[i].xAcceleration = -cosAngle*36.0;
 			playerVehicles[i].yAcceleration = -sinAngle*36.0;
 		}
+		if(playerVehicles[i].positionControl > 0)
+		{
+			if ((playerVehicles[i].xVelocity > 0) && ! ( playerVehicles[i].xAcceleration < 0)) {
+                playerVehicles[i].xAcceleration = - playerVehicles[i].positionControl;
+            }
+            else if ((playerVehicles[i].xVelocity < 0) && ! (playerVehicles[i].xAcceleration > 0)) {
+                playerVehicles[i].xAcceleration = playerVehicles[i].positionControl;
+            }
+			if ((playerVehicles[i].yVelocity > 0) && ! ( playerVehicles[i].yAcceleration < 0)) {
+                playerVehicles[i].yAcceleration = - playerVehicles[i].positionControl;
+            }
+            else if ((playerVehicles[i].yVelocity < 0) && ! (playerVehicles[i].yAcceleration > 0)) {
+                playerVehicles[i].yAcceleration = playerVehicles[i].positionControl;
+            }
+		}
+		if(playerVehicles[i].rotationControl > 0)
+		{
+			if ((playerVehicles[i].angularVelocity > 0) && ! ( playerVehicles[i].torque > 0)) {
+                playerVehicles[i].torque = playerVehicles[i].rotationControl;
+                //console.log("rotationControl:",playerVehicles[i].angularVelocity);
+                //console.log("rotationControl:",playerVehicles[i].torque);
+            }
+            else if ((playerVehicles[i].angularVelocity < 0) && ! (playerVehicles[i].torque < 0)) {
+                playerVehicles[i].torque = - playerVehicles[i].rotationControl;
+                //console.log("rotationControl:",playerVehicles[i].angularVelocity);
+                //console.log("rotationControl:",playerVehicles[i].torque);
+            }
+		}
 
 		/*shooting*/
 		if(playerVehicles[i].shootCooldown > 0)
@@ -100,17 +128,31 @@ function mainLoop()
 			var projectile =
 			graphicsEngine.createCircleVehicleAt(playerVehicles[i].x +cosAngle*54,
 										   playerVehicles[i].y +sinAngle*54, /*radius = */ 5.0);
+			var projectile_wing_l =
+			graphicsEngine.createCircleVehicleAt(playerVehicles[i].x + cosAngle*40 - sinAngle*25,
+										   playerVehicles[i].y +cosAngle*25+sinAngle*25, /*radius = */ 5.0);
+			var projectile_wing_r =
+			graphicsEngine.createCircleVehicleAt(playerVehicles[i].x + sinAngle*40 + cosAngle*25,
+										   playerVehicles[i].y -cosAngle*25+sinAngle*25, /*radius = */ 5.0);
 			if(i == 1)
 				projectile.file = ':images/purpleBomb.svg';
 
 			soundEngine.play('fire.wav');
 
 			graphicsEngine.appendProjectile(projectile);
+			graphicsEngine.appendProjectile(projectile_wing_l);
+			graphicsEngine.appendProjectile(projectile_wing_r);
 			var impulseX = cosAngle*40.0+playerVehicles[i].xVelocity;
 			var impulseY = sinAngle*40.0+playerVehicles[i].yVelocity;
 			projectile.applyImpulse(impulseX,impulseY);
+			projectile_wing_l.applyImpulse(impulseX,impulseY);
+			projectile_wing_r.applyImpulse(impulseX,impulseY);
 			projectile.diplomacy = 1; // diplomacy of player
+			projectile_wing_l.diplomacy = 1; // diplomacy of player
+			projectile_wing_r.diplomacy = 1; // diplomacy of player
 			projectile.isProjectile = true;
+			projectile_wing_l.isProjectile = true;
+			projectile_wing_r.isProjectile = true;
             //playerVehicles[i].reloadCooldown += 5;
 			playerVehicles[i].shootCooldown = 1;
 			//= playerVehicles[i].reloadCooldown >= 14 ? playerVehicles[i].reloadCooldown : 1;
