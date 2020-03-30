@@ -79,6 +79,12 @@ function mainLoop()
 			playerVehicles[i].xAcceleration = cosAngle*36.0;
 			playerVehicles[i].yAcceleration = sinAngle*36.0;
 		}
+		if(playerVehicles[i].deccelerating == true)
+		{
+			// update decceleration
+			playerVehicles[i].xAcceleration = -cosAngle*36.0;
+			playerVehicles[i].yAcceleration = -sinAngle*36.0;
+		}
 
 		/*shooting*/
 		if(playerVehicles[i].shootCooldown > 0)
@@ -105,9 +111,9 @@ function mainLoop()
 			projectile.applyImpulse(impulseX,impulseY);
 			projectile.diplomacy = 1; // diplomacy of player
 			projectile.isProjectile = true;
-            playerVehicles[i].reloadCooldown += 5;
-			playerVehicles[i].shootCooldown
-			= playerVehicles[i].reloadCooldown >= 14 ? playerVehicles[i].reloadCooldown : 4;
+            //playerVehicles[i].reloadCooldown += 5;
+			playerVehicles[i].shootCooldown = 1;
+			//= playerVehicles[i].reloadCooldown >= 14 ? playerVehicles[i].reloadCooldown : 1;
 		}
 	}
 

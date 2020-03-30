@@ -47,3 +47,10 @@ gradle.properties*
 local.properties*
 
 *.iml
+
+#other stuff
+src/menu/Style.jsc
+new_models/*.wings
+new_models/*.sgl
+android/gradle/wrapper/gradle-wrapper.jar
+

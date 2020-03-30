@@ -51,9 +51,20 @@ for(var i = 0; i< gameState.playerCount; ++i)
 
 function startAcceleration(/*Vehicle* */ vehicle)
 {
+	vehicle.deccelerating = false;
 	vehicle.accelerating = true;
 	vehicle.exhaust.visible = true;
 	soundEngine.play('loop_engine.wav_' +vehicle.i,-1);
+	disablePositionControl(vehicle);
+}
+
+function startDecceleration(/*Vehicle* */ vehicle)
+{
+	vehicle.accelerating = false;
+	vehicle.deccelerating = true;
+	vehicle.exhaust.visible = false;
+	soundEngine.play('loop_engine.wav_' +vehicle.i,-1);
+	disablePositionControl(vehicle);
 }
 
 function stopAcceleration(/*Vehicle* */ vehicle)
@@ -61,8 +72,18 @@ function stopAcceleration(/*Vehicle* */ vehicle)
 	vehicle.xAcceleration = 0.0;
 	vehicle.yAcceleration = 0.0;
 	vehicle.accelerating = false;
+	vehicle.deccelerating = false;
 	vehicle.exhaust.visible = false;
 	soundEngine.stop('loop_engine.wav_'+vehicle.i);
+}
+
+function enablePositionControl(/*Vehicle* */ vehicle)
+{
+	vehicle.positionControl = 100.0;
+}
+function disablePositionControl(/*Vehicle* */ vehicle)
+{
+	vehicle.positionControl = 0.0;
 }
 
 function enableShield(/*Vehicle* */ vehicle)
@@ -132,20 +153,43 @@ function onKeyPress(key)
         && playerVehicles[0].control == true && playerVehicles[0].wormholeState == Vehicle.OUTSIDE)
 	switch(key)
 	{      
-		case Qt.Key_Up:
+		case Qt.Key_E:
 		{
-			startAcceleration(playerVehicles[0]);
+			if(playerVehicles[0].deccelerating == true){
+				stopAcceleration(playerVehicles[0]);
+			}
+			else{
+				startAcceleration(playerVehicles[0]);
+			}
 			break;
 		}
-		case Qt.Key_Left:
+		case Qt.Key_D:
 		{
-			playerVehicles[0].angularVelocity = -250.0;
+			if(playerVehicles[0].accelerating == true){
+				stopAcceleration(playerVehicles[0]);
+			}
+			else{
+				startDecceleration(playerVehicles[0]);
+			}
+			break;
+		}
+		case Qt.Key_S:
+		{
+			//if(playerVehicles[0].angularVelocity < 5){
+			//	playerVehicles[0].angularVelocity = 0;
+			//	playerVehicles[0].torque = 0;
+			//}
+			//else{
+			//	playerVehicles[0].torque = 100.0;
+			//}
+			playerVehicles[0].angularVelocity = -350.0;
+
             isRotatingLeft = true;
 			break;
 		}
-		case Qt.Key_Right:
+		case Qt.Key_F:
 		{
-			playerVehicles[0].angularVelocity = 250.0;
+			playerVehicles[0].angularVelocity = 350.0;
             isRotatingRight = true;
 			break;
 		}
@@ -155,7 +199,7 @@ function onKeyPress(key)
 			break;
 		}
 		// Key_Enter didn't work
-		case Qt.Key_Return:
+		case Qt.Key_W:
 		{
 				startWormholeTravel(playerVehicles[0]);
 			break;
@@ -219,12 +263,19 @@ function onKeyRelease(key)
 if(!isNullQObject(playerVehicles[0]))
 switch (key)
 	{
-		case Qt.Key_Up:
+		case Qt.Key_E:
 		{
 				stopAcceleration(playerVehicles[0]);
+				enablePositionControl(playerVehicles[0]);
 			break;
 		}
-		case Qt.Key_Left:
+		case Qt.Key_D:
+		{
+				stopAcceleration(playerVehicles[0]);
+				enablePositionControl(playerVehicles[0]);
+			break;
+		}
+		case Qt.Key_S:
 		{
             isRotatingLeft = false;
             if(isRotatingRight === false)
@@ -234,7 +285,7 @@ switch (key)
 			break;
 		}
 
-		case Qt.Key_Right:
+		case Qt.Key_F:
 		{
             isRotatingRight = false;
             if(isRotatingLeft === false)

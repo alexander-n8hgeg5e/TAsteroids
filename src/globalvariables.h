@@ -2,6 +2,7 @@
 #define __GLOBALVARIABLES_H__
 
 #include <QList>
+#include <qimage.h>
 
 
 // all variables here must be const else linker errors will occur

@@ -8,6 +8,8 @@ MovingItem::MovingItem(QGraphicsItem * parent)
 	scale_(1.0),
 	maximumVelocity_(0.0,0.0),
 	acceleration_(0.0,0.0),
+	//torque_(0.0),
+	positionControl_(0.0),
 	decceleration_(0.0,0.0),
 	body_(NULL),
 	world_(NULL)
@@ -132,6 +134,17 @@ void MovingItem::advance(int phase)
 				ay = acceleration_.y();
 			}
 			body_->ApplyForce(body_->GetMass()*b2Vec2(ax,-ay),body_->GetWorldCenter());
+		}
+		//if(torque_ != 0.0)
+		//{
+		//	body_->ApplyTorque(torque_);
+		//}
+		//else if (positionControl_ != 0.0){
+		//	printf("%lf\n",positionControl_);
+		//	body_->ApplyForce(body_->GetMass()*b2Vec2( - velx * positionControl_, - vely * positionControl_),body_->GetWorldCenter());
+		//}
+		else {
+			body_->ApplyForce(body_->GetMass()*b2Vec2( - velx * 100.0, - vely * 100.0),body_->GetWorldCenter());
 		}
 
 		// update velocity
