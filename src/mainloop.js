@@ -99,53 +99,53 @@ function mainLoop(){
         timestep_dynamics(i);
 	}
 
-    //if(!isNullQObject(ufo) && ufo.wormholeState == Vehicle.OUTSIDE)
-	//{
-	//	var cosAngle = Math.cos(ufo.angle*Math.PI/180.0);
-	//	var sinAngle = Math.sin(ufo.angle*Math.PI/180.0);
-	//	if(ufo.shootCooldown <= 0)
-	//	{
-	//		var projectile =
-	//		graphicsEngine.createCircleVehicleAt(ufo.x +cosAngle*60,
-	//									   ufo.y +sinAngle*60, /*radius = */ 5.0);
-    //        projectile.file = ":images/turquoiseBomb.svg";
-	//		soundEngine.play('fire.wav');
-	//		graphicsEngine.appendProjectile(projectile);
-	//		var impulseX = cosAngle*40.0+ufo.xVelocity;
-	//		var impulseY = sinAngle*40.0+ufo.yVelocity;
-	//		projectile.applyImpulse(impulseX,impulseY);
-	//		projectile.diplomacy = 3; // diplomacy of player
-	//		projectile.isProjectile = true;
-	//		ufo.shootCooldown = 25;
-	//	}
-	//	else
-	//		--ufo.shootCooldown;
+    if(!isNullQObject(ufo) && ufo.wormholeState == Vehicle.OUTSIDE)
+	{
+		var cosAngle = Math.cos(ufo.angle*Math.PI/180.0);
+		var sinAngle = Math.sin(ufo.angle*Math.PI/180.0);
+		if(ufo.shootCooldown <= 0)
+		{
+			var projectile =
+			graphicsEngine.createCircleVehicleAt(ufo.x +cosAngle*60,
+										   ufo.y +sinAngle*60, /*radius = */ 5.0);
+            projectile.file = ":images/turquoiseBomb.svg";
+			soundEngine.play('fire.wav');
+			graphicsEngine.appendProjectile(projectile);
+			var impulseX = cosAngle*40.0+ufo.xVelocity;
+			var impulseY = sinAngle*40.0+ufo.yVelocity;
+			projectile.applyImpulse(impulseX,impulseY);
+			projectile.diplomacy = 3; // diplomacy of player
+			projectile.isProjectile = true;
+			ufo.shootCooldown = 25;
+		}
+		else
+			--ufo.shootCooldown;
 
-	//	ufo.xAcceleration = cosAngle*10.0;
-	//	ufo.yAcceleration = sinAngle*10.0;
+		ufo.xAcceleration = cosAngle*10.0;
+		ufo.yAcceleration = sinAngle*10.0;
 
-	//	++ufo.stayTime;
-	//	if(ufo.stayTime  > 1000) // if it stayed too long and it hasn't been destroyed
-	//	{
-	//		ufo.beginWormholeTravel();
-	//		soundEngine.play('vanish.wav');
-	//	}
-	//}
-	//else // isNullQObject(ufo)
-	//{
-	//	--ufoAppearCountdown;
-    //    if(ufoAppearCountdown <= 0  && !gameState.gameOver)
-	//	{
-	//		ufoAppearCountdown = 1000; // appear approximately every 40s
-	//		appearUfo();
-	//	}
-	//}
+		++ufo.stayTime;
+		if(ufo.stayTime  > 1000) // if it stayed too long and it hasn't been destroyed
+		{
+			ufo.beginWormholeTravel();
+			soundEngine.play('vanish.wav');
+		}
+	}
+	else // isNullQObject(ufo)
+	{
+		--ufoAppearCountdown;
+        if(ufoAppearCountdown <= 0  && !gameState.gameOver)
+		{
+			ufoAppearCountdown = 1000; // appear approximately every 40s
+			appearUfo();
+		}
+	}
 
 	// uncomment this if no asteroids are spawned, else cpu load --> 100%
-    //if(graphicsEngine.asteroidCount === 0 && !gameState.gameOver)
-    //{
-	//	gameState.phase += 1;
-    //}
+    if(graphicsEngine.asteroidCount === 0 && !gameState.gameOver)
+    {
+		gameState.phase += 1;
+    }
     }
 
 function timestep_dynamics(num_player){
@@ -172,7 +172,7 @@ function timestep_weapon_system_control(num_player){
 function timestep_engine_control(num_player){
     if (playerVehicles[num_player].accelerating > 0){
         if (playerVehicles[num_player].exhaust.visible == false){engine_main_start(num_player);}
-        playerVehicles[num_player].engine_main_power = 36.0;
+        playerVehicles[num_player].engine_main_power = 60.0;
         }
     else{
         if (playerVehicles[num_player].exhaust.visible == true){engine_main_stop(num_player);}
