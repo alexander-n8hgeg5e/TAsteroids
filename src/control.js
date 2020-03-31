@@ -15,16 +15,14 @@ ScriptProxy.signalGestureFinished.connect(onGestureFinished);
 // check setupScript in graphicsview.cpp for this issue
 
 
-function isNullQObject(obj)
-    {
-      return obj === null || obj === undefined
+function isNullQObject(obj){
+    return obj === null || obj === undefined
     }
 
 
 var playerVehicles = [];
 
-for(var i = 0; i< gameState.playerCount; ++i)
-{
+for(var i = 0; i< gameState.playerCount; ++i){
 	playerVehicles[i] = graphicsEngine.createVehicleAt(416 + 384*i,-600);
 	playerVehicles[i].file = i == 0 ? ':playerVehicle1.svg' :  ':images/purplePlayerVehicle1.svg';
 	playerVehicles[i].setCenterOffset();
@@ -46,95 +44,76 @@ for(var i = 0; i< gameState.playerCount; ++i)
 	playerVehicles[i].shield.visible = false;
 	playerVehicles[i].shieldDuration = 200;
 	playerVehicles[i].wormholeTravelTime = 0;
-	playerVehicles[i].control = true; // enable disable user control
-}
+	playerVehicles[i].control_user = true; // enable disable user control
+    }
 
-function startAcceleration(/*Vehicle* */ vehicle)
-{
-	vehicle.deccelerating = false;
-	vehicle.accelerating = true;
-	vehicle.exhaust.visible = true;
-	soundEngine.play('loop_engine.wav_' +vehicle.i,-1);
-	disablePositionControl(vehicle);
-}
+/* acceleration decceleration */
+function startAcceleration(num_player){
+	playerVehicles[num_player].deccelerating = false;
+	playerVehicles[num_player].accelerating = 1.0;
+	playerVehicles[num_player].control_position = 0.0;}
+function startDecceleration(num_player){
+	playerVehicles[num_player].accelerating = 0.0;
+	playerVehicles[num_player].deccelerating = true;
+	playerVehicles[num_player].control_position = 0.0;}
+function stopAccelerationDecceleration(num_player){
+	playerVehicles[num_player].accelerating  = 1.0;
+	playerVehicles[num_player].deccelerating = false;
+	playerVehicles[num_player].control_position = 20.0;}
 
-function startDecceleration(/*Vehicle* */ vehicle)
-{
-	vehicle.accelerating = false;
-	vehicle.deccelerating = true;
-	vehicle.exhaust.visible = false;
-	soundEngine.play('loop_engine.wav_' +vehicle.i,-1);
-	disablePositionControl(vehicle);
-}
+/* rotation */
+function startRotateLeft(num_player){
+	playerVehicles[num_player].control_heading = 0.0;
+	playerVehicles[num_player].torque = 500.0;}
+function startRotateRight(num_player){
+	playerVehicles[num_player].control_heading = 0.0;
+	playerVehicles[num_player].torque = -500.0;}
+function stopRotateLeftRight(num_player){
+	playerVehicles[num_player].torque = 0.0;
+	playerVehicles[num_player].control_heading = 100.0;}
 
-function stopAcceleration(/*Vehicle* */ vehicle)
-{
-	vehicle.xAcceleration = 0.0;
-	vehicle.yAcceleration = 0.0;
-	vehicle.accelerating = false;
-	vehicle.deccelerating = false;
-	vehicle.exhaust.visible = false;
-	soundEngine.stop('loop_engine.wav_'+vehicle.i);
-}
+/* shooting */
+function startFire(playernum){
+    playerVehicles[0].shooting = true;}
+function stopFire(playernum){
+    playerVehicles[0].shooting = false;}
 
-function enablePositionControl(/*Vehicle* */ vehicle)
-{
-	vehicle.positionControl = 20.0;
-}
-function enableRotationControl(/*Vehicle* */ vehicle)
-{
-	vehicle.rotationControl = 100.0;
-}
-function disablePositionControl(/*Vehicle* */ vehicle)
-{
-	vehicle.positionControl = 0.0;
-}
-function disableRotationControl(/*Vehicle* */ vehicle)
-{
-	vehicle.rotationControl = 0.0;
-}
-
-function enableShield(/*Vehicle* */ vehicle)
-{
+function enableShield(/*Vehicle* */ vehicle){
 	if(vehicle.shieldDuration < 75)
 		return;
 
 	vehicle.shield.visible = true;
 	vehicle.indestructible = true;
-	vehicle.control = false;
+	vehicle.control_user = false;
 	soundEngine.play('loop_shield.wav_' + vehicle.i,-1);
-}
+    }
 
-function disableShield(/*Vehicle* */ vehicle)
-{
+function disableShield(/*Vehicle* */ vehicle){
 	vehicle.shield.visible = false;
 	vehicle.indestructible = false;
-	vehicle.control = true;
+	vehicle.control_user = true;
 	soundEngine.stop('loop_shield.wav_' + vehicle.i);
-}
+    }
 
-function startWormholeTravel(/*Vehicle* */ vehicle)
-{
+function startWormholeTravel(/*Vehicle* */ vehicle){
     if(vehicle.wormholeState != Vehicle.OUTSIDE)
 		return;
 
-	vehicle.control = false; // disable user control
+	vehicle.control_user = false; // disable user control
 	stopAcceleration(vehicle);
 	vehicle.wormholeTravelTime = 50;
 	vehicle.beginWormholeTravel();
 	soundEngine.play('vanish.wav');
-}
+    }
 
-function onGestureStarted(gesture)
-{
+function onGestureStarted(gesture){
     if(gameState.gameOver)
     {
         return;
     }
-}
+    }
 
-function onGestureFinished(gesture)
-{
+function onGestureFinished(gesture){
     if(gameState.gameOver)
     {
         return;
@@ -144,115 +123,41 @@ function onGestureFinished(gesture)
     {
         startWormholeTravel(playerVehicles[0]);
     }
-}
+    }
 
-var isRotatingLeft = false;
-var isRotatingRight = false;
-
-
-function key_up_press(playernum){
-	if(playerVehicles[0].deccelerating == true){
-		stopAcceleration(playerVehicles[0]);
-	}
-	else{
-		startAcceleration(playerVehicles[0]);
-	}
-}
-function key_up_release(playernum){
-	stopAcceleration(playerVehicles[playernum]);
-	enablePositionControl(playerVehicles[playernum]);
-}
-function key_down_press(playernum){
-	if(playerVehicles[0].accelerating == true){
-		stopAcceleration(playerVehicles[0]);
-	}
-	else{
-		startDecceleration(playerVehicles[0]);
-	}
-}
-function key_down_release(playernum){
-	stopAcceleration(playerVehicles[playernum]);
-	enablePositionControl(playerVehicles[playernum]);
-}
-function key_left_press(playernum){
-	//if(playerVehicles[0].angularVelocity < 0.01){
-	//    playerVehicles[0].angularVelocity = 0;
-	//    playerVehicles[0].torque = 0;
-	//    }
-	//else{
-	    disableRotationControl(playerVehicles[0]);
-		playerVehicles[0].torque = 500.0;
-	//}
-    //playerVehicles[0].angularVelocity = -350.0;
-
-    isRotatingLeft = true;
-}
-function key_left_release(playernum){
-    isRotatingLeft = false;
-    //if(isRotatingRight === false)
-    //{
-        //playerVehicles[0].angularVelocity = 0;
-	    playerVehicles[playernum].torque = 0.0;
-		enableRotationControl(playerVehicles[playernum]);
-    //}
-}
-function key_right_press(playernum){
-	//if(playerVehicles[0].angularVelocity < 0.01){
-	//    playerVehicles[0].angularVelocity = 0.0;
-	//    playerVehicles[0].torque = 0;
-	//    }
-	//else{
-	    disableRotationControl(playerVehicles[0]);
-		playerVehicles[0].torque = -500.0;
-    //}
-	//playerVehicles[0].angularVelocity = 350.0;
-    isRotatingRight = true;
-}
-function key_right_release(playernum){
-    isRotatingRight = false;
-    //if(isRotatingLeft === false)
-    //{
-        //playerVehicles[0].angularVelocity = 0;
-	    playerVehicles[playernum].torque = 0.0;
-		enableRotationControl(playerVehicles[playernum]);
-            //}
-}
-
-function onKeyPress(key)
-	{
-
+function onKeyPress(key){
     if(gameState.gameOver)
     {
         return;
     }
 
 	if(!isNullQObject(playerVehicles[0])
-        && playerVehicles[0].control == true && playerVehicles[0].wormholeState == Vehicle.OUTSIDE)
+        && playerVehicles[0].control_user == true && playerVehicles[0].wormholeState == Vehicle.OUTSIDE)
 	switch(key)
 	{      
         case Qt.Key_Up:
 		{
-            key_up_press(0);
+            startAcceleration(0);
 			break;
 		}
 		case Qt.Key_Down:
 		{
-            key_down_press(0);
+            startDecceleration(0);
 			break;
 		}
 		case Qt.Key_Left:
 		{
-            key_left_press(0);
+            startRotateLeft(0);
 			break;
 		}
 		case Qt.Key_Right:
 		{
-            key_right_press(0);
+            startRotateRight(0);
 			break;
 		}
 		case Qt.Key_Space:
 		{
-            playerVehicles[0].shooting = true;
+            startFire(0);
 			break;
 		}
 		// Key_Enter didn't work
@@ -270,27 +175,27 @@ function onKeyPress(key)
 	}
 
 	if(!isNullQObject(playerVehicles[1])
-        && playerVehicles[1].control == true && playerVehicles[1].wormholeState == Vehicle.OUTSIDE)
+        && playerVehicles[1].control_user == true && playerVehicles[1].wormholeState == Vehicle.OUTSIDE)
 	switch(key)
 	{
 		case Qt.Key_W:
 		{
-            key_up_press(1);
+            startAcceleration(1);
 			break;
         }
 		case Qt.Key_A:
 		{
-            key_left_press(1);
+            startRotateLeft(1);
 			break;
 		}
 		case Qt.Key_S:
 		{
-            key_down_press(1);
+            startDecceleration(1);
 			break;
 		}
 		case Qt.Key_D:
 		{
-            key_right_press(1);
+            startRotateRight(1);
 			break;
 		}
 		case Qt.Key_F:
@@ -305,12 +210,12 @@ function onKeyPress(key)
 		}
 		case Qt.Key_Control:
 		{
-			playerVehicles[1].shooting = true;
+            startFire(1);
 			break;
 		}
 		default:;
 	}
-}
+    }
 
 function onKeyRelease(key){
     if(gameState.gameOver){
@@ -320,27 +225,27 @@ function onKeyRelease(key){
     switch (key){
         case Qt.Key_Up:
 		{
-            key_up_release(0);
+            stopAccelerationDecceleration(0);
 			break;
 		}
         case Qt.Key_Down:
 		{
-            key_down_release(0);
+            stopAccelerationDecceleration(0);
 			break;
 		}
 		case Qt.Key_Left:
 		{
-            key_left_release(0);
+            stopRotateLeftRight(0);
 			break;
 		}
         case Qt.Key_Right:
 		{
-            key_right_release(0);
+            stopRotateLeftRight(0);
 			break;
 		}
 		case Qt.Key_Space:
 		{
-			playerVehicles[0].shooting = false;
+            stopFire(0);
 			break;
 		}
 		case Qt.Key_Delete:
@@ -357,27 +262,27 @@ function onKeyRelease(key){
 	{
 		case Qt.Key_W:
 		{  // vehicle 1 up
-            key_up_release(1);
+            stopAccelerationDecceleration(1);
 			break;
 		}
 		case Qt.Key_A:
 		{  // vehicle 1 left
-            key_left_release(1);
+            stopRotateLeftRight(1);
 			break;
 		}
 		case Qt.Key_S:
 		{  // vehicle 1 down
-            key_down_release(1);
+            stopAccelerationDecceleration(1);
 			break;
 		}
 		case Qt.Key_D:
 		{  // vehicle 1 right
-            key_right_release(1);
+            stopRotateLeftRight(1);
 			break;
 		}
 		case Qt.Key_Control:
 		{  // vehicle 1 fire
-			playerVehicles[1].shooting = false;
+            stopFire(1);
 			break;
 		}
 		case Qt.Key_G:
@@ -387,5 +292,6 @@ function onKeyRelease(key){
 		}
 		default:;
 	}
-}
-// vim: set foldmethod=indent foldlevel=0 ;
+    }
+
+// vim: set foldmethod=indent foldlevel=0 foldnestmax=1 :

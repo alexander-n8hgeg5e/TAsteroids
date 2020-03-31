@@ -87,11 +87,8 @@ Window {
                 mainForm.menuLevelPlayerCount.visible = false;
                 mainForm.menuLevelPlayerInput.visible = false;
                 mainForm.menuLevelHighScore.visible = false;
+
             }
-
-
-    }
-
     // window dragging
     MouseArea {
         id: dragMouseArea

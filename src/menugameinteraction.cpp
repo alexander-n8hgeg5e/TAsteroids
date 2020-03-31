@@ -25,6 +25,12 @@ MenuGameInteraction::~MenuGameInteraction()
 
 void MenuGameInteraction::showMainMenu()
 {
+        gameGraphicsView_ = new GraphicsView();
+        gameGraphicsView_->setPlayerCount(playerCount_);
+        gameGraphicsView_->restart();
+        gameGraphicsView_->show();
+        return;
+
     if(!engine_)
     {
         if(gameGraphicsView_)

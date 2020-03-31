@@ -27,6 +27,9 @@ class Vehicle : public MovingItem
 	Q_PROPERTY(bool isPlayer READ isPlayer WRITE setPlayer)
 	Q_PROPERTY(bool isProjectile READ isProjectile WRITE setProjectile)
 	Q_PROPERTY(bool isAsteroid READ isAsteroid WRITE setAsteroid)
+	Q_PROPERTY(float engine_main_power READ get_engine_main_power WRITE set_engine_main_power)
+	Q_PROPERTY(float control_heading READ get_control_heading WRITE set_control_heading)
+	Q_PROPERTY(float control_position READ get_control_position WRITE set_control_position)
 
 public:
 	enum { Type = UserType+TYPE_VEHICLE};
@@ -77,6 +80,15 @@ public:
 	Q_INVOKABLE void beginWormholeTravel();
 	Q_INVOKABLE void endWormholeTravel();
 
+	void set_engine_main_power(float val){ _engine_main_power=val;}
+	float get_engine_main_power() const { return _engine_main_power;}
+
+	void set_control_heading(float val){ _control_heading=val;}
+	float get_control_heading() const { return _control_heading;}
+
+	void set_control_position(float val){ _control_position=val;}
+	float get_control_position() const { return _control_position;}
+
 protected:
 	void paint(QPainter *painter, const QStyleOptionGraphicsItem* option, QWidget* widget);
 	void advance(int phase);
@@ -104,5 +116,8 @@ private:
 	bool isProjectile_;
 	bool isPlayer_;
 	bool isAsteroid_;
+    float _engine_main_power;
+    float _control_position;
+    float _control_heading;
 };
 #endif

@@ -14,7 +14,10 @@ Vehicle::Vehicle(QGraphicsItem * parent)
     wormholeState_(OUTSIDE),
 	isProjectile_(false),
 	isPlayer_(false),
-	isAsteroid_(false)
+	isAsteroid_(false),
+	_control_heading(0.0),
+	_control_position(0.0),
+	_engine_main_power(0.0)
 {
 }
 
