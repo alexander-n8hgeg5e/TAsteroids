@@ -150,7 +150,7 @@ function mainLoop(){
 
 function timestep_dynamics(num_player){
     if (timestep % 10 == 0){
-        console.log("engine_main_power:",playerVehicles[num_player].engine_main_power);
+        //console.log("engine_main_power:",playerVehicles[num_player].engine_main_power);
         }
 	playerVehicles[num_player].xAcceleration = cosAnglePlayerVehicle * playerVehicles[num_player].engine_main_power;
 	playerVehicles[num_player].yAcceleration = sinAnglePlayerVehicle * playerVehicles[num_player].engine_main_power;
