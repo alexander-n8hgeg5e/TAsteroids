@@ -244,6 +244,7 @@ function timestep_cannon(num_player,num_cannon){
 		    var impulseY = sinAnglePlayerVehicle*40.0+playerVehicles[num_player].yVelocity;
 		    projectile.applyImpulse(impulseX,impulseY);
             playerVehicles[num_player].applyImpulse( - impulseX*0.01, - impulseY*0.01);
+            soundEngine.play('fire.wav');
 		    projectile.diplomacy = 1; // diplomacy of player
 		    projectile.isProjectile = true;
             //playerVehicles[num_player].reloadCooldown += 5;
