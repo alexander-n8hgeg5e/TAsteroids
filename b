@@ -1,5 +1,5 @@
 #!/bin/bash
-sudo rsync -rciv src/ /var/tmp/portage/games-arcade/TAsteroids-9999/work/TAsteroids-9999/src
+sudo rsync -rciv --exclude ".git" ./ /var/tmp/portage/games-arcade/TAsteroids-9999/work/TAsteroids-9999/
 sudo chown -R :portage /var/tmp/portage/games-arcade/TAsteroids-9999/work
 sudo -u portage rm /var/tmp/portage/games-arcade/TAsteroids-9999/.compiled
 if [[ "$1" -ne "" ]];then
