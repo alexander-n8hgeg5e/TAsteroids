@@ -29,7 +29,7 @@ for(var i = 0; i< gameState.playerCount; ++i){
 	playerVehicles[i].diplomacy = 1;
 	playerVehicles[i].hitpoints = 10;
 	playerVehicles[i].isPlayer = true;
-	playerVehicles[i].setMaximumVelocity(50.0,50.0);
+	playerVehicles[i].setMaximumVelocity(100.0,100.0);
 
 
 	// dynamic properties
@@ -100,7 +100,7 @@ function startWormholeTravel(/*Vehicle* */ vehicle){
 		return;
 
 	vehicle.control_user = false; // disable user control
-	stopAcceleration(vehicle);
+	stopAccelerationDecceleration(vehicle);
 	vehicle.wormholeTravelTime = 50;
 	vehicle.beginWormholeTravel();
 	soundEngine.play('vanish.wav');
@@ -135,22 +135,22 @@ function onKeyPress(key){
         && playerVehicles[0].control_user == true && playerVehicles[0].wormholeState == Vehicle.OUTSIDE)
 	switch(key)
 	{      
-        case Qt.Key_Up:
+        case Qt.Key_E:
 		{
             startAcceleration(0);
 			break;
 		}
-		case Qt.Key_Down:
+		case Qt.Key_D:
 		{
             startDecceleration(0);
 			break;
 		}
-		case Qt.Key_Left:
+		case Qt.Key_S:
 		{
             startRotateLeft(0);
 			break;
 		}
-		case Qt.Key_Right:
+		case Qt.Key_F:
 		{
             startRotateRight(0);
 			break;
@@ -166,7 +166,7 @@ function onKeyPress(key){
 			startWormholeTravel(playerVehicles[0]);
 			break;
 		}
-		case Qt.Key_Delete:
+		case Qt.Key_R:
 		{
 			enableShield(playerVehicles[0]);
 			break;
@@ -223,22 +223,22 @@ function onKeyRelease(key){
     }
     if(!isNullQObject(playerVehicles[0]))
     switch (key){
-        case Qt.Key_Up:
+        case Qt.Key_E:
 		{
             stopAccelerationDecceleration(0);
 			break;
 		}
-        case Qt.Key_Down:
+        case Qt.Key_D:
 		{
             stopAccelerationDecceleration(0);
 			break;
 		}
-		case Qt.Key_Left:
+		case Qt.Key_S:
 		{
             stopRotateLeftRight(0);
 			break;
 		}
-        case Qt.Key_Right:
+        case Qt.Key_F:
 		{
             stopRotateLeftRight(0);
 			break;
@@ -248,7 +248,7 @@ function onKeyRelease(key){
             stopFire(0);
 			break;
 		}
-		case Qt.Key_Delete:
+		case Qt.Key_R:
 		{
 			disableShield(playerVehicles[0]);
 			break;
